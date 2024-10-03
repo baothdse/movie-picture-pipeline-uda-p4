@@ -42,7 +42,7 @@ jobs:
         run: pip install pipenv
 
       # Install dependencies
-      - run: cd starter/backend && pipenv install
+      - run: cd starter/backend && pipenv install --dev
 
       # run linter
       - run: cd starter/backend && pipenv run lint
