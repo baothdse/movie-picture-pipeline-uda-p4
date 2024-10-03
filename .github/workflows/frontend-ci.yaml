@@ -36,7 +36,7 @@ jobs:
         run: cd starter/frontend && npm install --save
       
       - name: Run linter
-        run: cd starter/frontend && npm run linter
+        run: cd starter/frontend && npm run lint
 
       - name: Run test
         run: cd starter/frontend && npm run test
