@@ -19,7 +19,7 @@ on:
     branches:
       - 'main'
     paths:
-      # Trigger only if files in 'frontend' directory change
+      # Trigger only if files in 'backend' directory change
       - 'starter/backend/**'
 
 jobs:
