@@ -12,6 +12,9 @@ on:
       - reopened
     branches:
       - 'main'
+  push:
+    branches:
+      - 'features/**'
 jobs:
   run-ci-pipeline:
     runs-on: ubuntu-latest
