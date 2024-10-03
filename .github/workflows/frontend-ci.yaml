@@ -31,12 +31,12 @@ jobs:
         run: cd starter/frontend && npm install --save
       
       - name: Run linter
-        run: npm run linter
+        run: cd starter/frontend && npm run linter
 
       - name: Run test
-        run: npm run test
+        run: cd starter/frontend && npm run test
 
       - name: Build
-        run: npm run build
+        run: cd starter/frontend && npm run build
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
