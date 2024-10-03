@@ -1,0 +1,57 @@
+name: Backend Continuous Integration
+run-name: ${{ github.actor }} is running  CI Pipeline
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  push:
+    branches:
+      - 'features/**'
+    paths:
+      # Trigger only if files in 'backend' directory change
+      - 'starter/backend/**'
+  # Automatic trigger on pull request events targeting the main branch
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - 'main'
+    paths:
+      # Trigger only if files in 'frontend' directory change
+      - 'starter/backend/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Install dependencies
+      - run: cd starter/backend && pipenv install
+
+      # run linter
+      - run: cd starter/backend && pipenv run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Install dependencies
+      - run: cd starter/backend && pipenv install
+
+      # Run the tests
+      - run: cd starter/backend && pipenv run test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: cd starter/backend && docker build --tag mp-backend:latest .
