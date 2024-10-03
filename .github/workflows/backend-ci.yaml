@@ -31,7 +31,7 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
       # Install dependencies
-      - run: ls
+      - run: echo "$PWD"
       - run: cd starter/backend && pipenv install
 
       # run linter
