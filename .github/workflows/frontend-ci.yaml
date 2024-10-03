@@ -17,7 +17,7 @@ on:
       - 'main'
     paths:
       # Trigger only if files in 'frontend' directory change
-      'frontend/**'
+      - 'frontend/**'
 jobs:
   lint:
     runs-on: ubuntu-latest
