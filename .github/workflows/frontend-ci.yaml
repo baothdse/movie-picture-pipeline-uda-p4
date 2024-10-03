@@ -9,7 +9,7 @@ on:
       - 'features/**'
     paths:
       # Trigger only if files in 'frontend' directory change
-      - 'frontend/**'
+      - 'starter/frontend/**'
   # Automatic trigger on pull request events targeting the main branch
   pull_request_target:
     types:
