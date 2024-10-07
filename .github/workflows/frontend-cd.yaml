@@ -69,7 +69,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: [ test]
+    needs: [ test ]
     env:
       AWS_DEFAULT_REGION: us-east-1
     steps:
@@ -82,6 +82,7 @@ jobs:
 
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - run: echo "Region $AWS_DEFAULT_REGION!"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
