@@ -1,5 +1,5 @@
 name: Backend Continuous Deployment
-run-name: ${{ github.actor }} is running Backend CD Pipeline
+run-name: ${{ github.actor }} is running Frontend CD Pipeline
 
 on:
   # Allows you to run this workflow manually from the Actions tab
