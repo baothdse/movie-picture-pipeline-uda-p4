@@ -138,9 +138,7 @@ jobs:
 
       # Retrieve the cluster kubeconfig
       - name: Get Cluster Kubeconfig
-        uses: aws-actions/eks-update-kubeconfig@v2
-        with:
-          cluster-name: $CLUSTER_NAME  # Replace with your cluster name
+        run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }}
 
       - name: Print kubectl & kustomize versions
         run: |-
