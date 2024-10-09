@@ -21,6 +21,9 @@ permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read
 
+env:
+  AWS_DEFAULT_REGION: us-east-1
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -77,8 +80,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [ lint, test ]
-    env:
-      AWS_DEFAULT_REGION: us-east-1
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -95,7 +96,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: $AWS_DEFAULT_REGION
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -119,6 +120,8 @@ jobs:
     needs: [ build ]
     env:
       CLUSTER_NAME: us-east-1
+
+
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -132,7 +135,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: $AWS_DEFAULT_REGION
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       # Retrieve the cluster kubeconfig
       - name: Get Cluster Kubeconfig
