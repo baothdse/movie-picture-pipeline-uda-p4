@@ -1,0 +1,126 @@
+name: Backend Continuous Deployment
+run-name: ${{ github.actor }} is running Backend CD Pipeline
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  push:
+    branches:
+      - 'features/**'
+  # Automatic trigger on pull request events targeting the main branch
+  # pull_request_target:
+  #   types:
+  #     - opened
+  #     - synchronize
+  #   branches:
+  #     - 'main'
+  #   paths:
+  #     # Trigger only if files in 'backend' directory change
+  #     - 'starter/backend/**'
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Check out source code
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      
+      # Setup Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pipenv'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      # Install dependencies
+      - run: cd starter/backend && pipenv install --dev
+
+      # run linter
+      - run: cd starter/backend && pipenv run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      # Check out source code
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      
+      # Setup Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pipenv'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      # Install dependencies
+      - run: cd starter/backend && pipenv install
+
+      # Run the tests
+      - run: cd starter/backend && pipenv run test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [ lint, test ]
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: mp-backend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          cd starter/backend
+          docker build $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      
+      - name: Check out repository code
+        uses: actions/checkout@v4
