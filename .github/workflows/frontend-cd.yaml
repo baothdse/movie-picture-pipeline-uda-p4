@@ -23,6 +23,8 @@ permissions:
 
 env:
   AWS_DEFAULT_REGION: us-east-1
+  ECR_REPOSITORY: frontend
+  ECR_IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   test:
@@ -104,23 +106,49 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: frontend
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           cd starter/frontend
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG . --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG . --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000
+          docker push $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: [ build ]
-  #   steps:
-  #     - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-  #     - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-  #     - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    env:
+      CLUSTER_NAME: cluster
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v4
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Retrieve the cluster kubeconfig
+      - name: Get Cluster Kubeconfig
+        run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }}
+
+      - run: cd starter/frontend/k8s
+
+      # Set the image tag to the newer version
+      - name: Set image url and deploy
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          kustomize edit set image frontend=$REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
+          kustomize build | kubectl apply -f -
