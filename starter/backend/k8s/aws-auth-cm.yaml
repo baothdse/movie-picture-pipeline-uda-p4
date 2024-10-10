@@ -5,7 +5,7 @@ metadata:
   namespace: kube-system
 data:
   mapUsers: |
-    - userarn: arn:aws:sts::615858357060:assumed-role/voclabs/user1884696=6897a8ee-9afd-11ec-903a-9715669c9ef3
-      username: user1884696
+    - userarn: arn:aws:iam::615858357060:user/github-action-user
+      username: github-action-user
       groups:
         - system:masters
