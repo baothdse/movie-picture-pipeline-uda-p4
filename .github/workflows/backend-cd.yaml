@@ -144,13 +144,12 @@ jobs:
       - name: Get Cluster Kubeconfig
         run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }}
 
-      - run: cd starter/backend/k8s
-
       # Set the image tag to the newer version
       - name: Set image url and deploy
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          cd starter/frontend/k8s
           kustomize edit set image backend=$REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           kustomize build | kubectl apply -f -
       
