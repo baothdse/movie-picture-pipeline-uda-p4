@@ -143,6 +143,11 @@ jobs:
       - name: Get Cluster Kubeconfig
         run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }}
 
+      - name: Print kubectl & kustomize versions
+        run: |-
+          kubectl version
+          kustomize version
+
       # Set the image tag to the newer version
       - name: Set image url and deploy
         env:
