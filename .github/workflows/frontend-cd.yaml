@@ -106,7 +106,7 @@ jobs:
         # Fetch backend URL (if needed from Kubernetes)
       - name: Get backend URL from Kubernetes
         run: |
-          BACKEND_URL=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Backend URL: $BACKEND_URL"
         shell: bash
 
