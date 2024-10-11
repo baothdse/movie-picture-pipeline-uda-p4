@@ -4,19 +4,19 @@ run-name: ${{ github.actor }} is running Frontend CD Pipeline
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - 'features/**'
-  # Automatic trigger on pull request events targeting the main branch
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
+  push:
     branches:
-      - 'main'
-    paths:
-      # Trigger only if files in 'backend' directory change
-      - 'starter/backend/**'
+      - 'features/**'
+  # Automatic trigger on pull request events targeting the main branch
+  # pull_request_target:
+  #   types:
+  #     - opened
+  #     - synchronize
+  #   branches:
+  #     - 'main'
+  #   paths:
+  #     # Trigger only if files in 'backend' directory change
+  #     - 'starter/backend/**'
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read
@@ -156,3 +156,9 @@ jobs:
           cd starter/frontend/k8s
           kustomize edit set image frontend=$REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           kustomize build | kubectl apply -f -
+
+      - name: Get pod
+        run: kubectl get pod
+
+      - name: Get Service
+        run: kubectl get svc

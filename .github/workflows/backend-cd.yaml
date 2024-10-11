@@ -165,3 +165,9 @@ jobs:
           kustomize edit set image backend=$REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           kustomize build | kubectl apply -f -
       
+      - name: Get pod
+        run: kubectl get pod
+
+      - name: Get Service
+        run: kubectl get svc
+      
