@@ -19,12 +19,3 @@ spec:
           image: frontend
           ports:
             - containerPort: 3000
-          envFrom:
-          - configMapRef:
-              name: mp-config
-          env:
-          - name: REACT_APP_MOVIE_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: mp-config
-                key: REACT_APP_MOVIE_API_URL
