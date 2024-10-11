@@ -113,18 +113,19 @@ jobs:
         run: aws eks --region us-east-1 update-kubeconfig --name ${{ env.CLUSTER_NAME }}
 
         # Fetch backend URL (if needed from Kubernetes)
-      - name: Get backend URL from Kubernetes
-        id: get-backend-url
-        run: |
-          BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "Backend URL: $BACKEND_URL"
-        shell: bash
+      # - name: Get backend URL from Kubernetes
+      #   id: get-backend-url
+      #   run: |
+      #     BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+      #     echo "Backend URL: $BACKEND_URL"
+      #   shell: bash
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          BACKEND_URL: ${{ steps.get-backend-url.outputs.BACKEND_URL }}
+          # BACKEND_URL: ${{ steps.get-backend-url.outputs.BACKEND_URL }}
         run: |
+          BACKEND_URL=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Backend URL: $BACKEND_URL"
           echo $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           cd starter/frontend
