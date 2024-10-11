@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: mp-config
 data:
-  REACT_APP_MOVIE_API_URL: aee8e74142a9849909e6152baaa14fe6-1397824458.us-east-1.elb.amazonaws.com
+  REACT_APP_MOVIE_API_URL: http://aee8e74142a9849909e6152baaa14fe6-1397824458.us-east-1.elb.amazonaws.com
