@@ -125,7 +125,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           # BACKEND_URL: ${{ steps.get-backend-url.outputs.BACKEND_URL }}
         run: |
-          BACKEND_URL=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "Backend URL: $BACKEND_URL"
           echo $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           cd starter/frontend
