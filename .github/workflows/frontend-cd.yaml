@@ -2,6 +2,10 @@ name: Frontend Continuous Deployment
 run-name: ${{ github.actor }} is running Frontend CD Pipeline
 
 on:
+  workflow_run:
+    workflows: ["Backend Continuous Deployment"]
+    types:
+      - completed
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   push:
@@ -103,6 +107,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+        # Update the cluster kubeconfig
+      - name: Update Cluster Kubeconfig
+        run: aws eks --region us-east-1 update-kubeconfig --name ${{ env.CLUSTER_NAME }}
+
         # Fetch backend URL (if needed from Kubernetes)
       - name: Get backend URL from Kubernetes
         run: |
@@ -152,8 +160,6 @@ jobs:
       # Update the cluster kubeconfig
       - name: Update Cluster Kubeconfig
         run: aws eks --region us-east-1 update-kubeconfig --name ${{ env.CLUSTER_NAME }}
-
-      - run: cat ~/.kube/config
 
       # Set the image tag to the newer version
       - name: Set image url and deploy
