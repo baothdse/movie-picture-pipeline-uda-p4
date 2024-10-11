@@ -123,6 +123,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          echo "Backend URL: $BACKEND_URL"
           echo $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
           cd starter/frontend
           docker build -t $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG . --build-arg=REACT_APP_MOVIE_API_URL=$BACKEND_URL
