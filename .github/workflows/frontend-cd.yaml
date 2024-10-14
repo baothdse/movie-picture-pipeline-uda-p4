@@ -10,17 +10,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'features/**'
-  # Automatic trigger on pull request events targeting the main branch
-  # pull_request_target:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #   branches:
-  #     - 'main'
-  #   paths:
-  #     # Trigger only if files in 'backend' directory change
-  #     - 'starter/backend/**'
+      - 'main'
+      
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read
