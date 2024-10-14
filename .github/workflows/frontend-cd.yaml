@@ -120,7 +120,7 @@ jobs:
           BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           cd starter/frontend
           echo "Backend URL: $BACKEND_URL"
-          docker build -t $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG . --build-arg REACT_APP_MOVIE_API_URL=a8730013e97ab4e32bd720844127fa54-664901318.us-east-1.elb.amazonaws.com
+          docker build -t $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG . --build-arg REACT_APP_MOVIE_API_URL=http://a8730013e97ab4e32bd720844127fa54-664901318.us-east-1.elb.amazonaws.com
           docker push $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
 
       - run: echo "🍏 This job's status is ${{ job.status }}"
