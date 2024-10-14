@@ -123,7 +123,7 @@ jobs:
           docker build -t $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG . --build-arg REACT_APP_MOVIE_API_URL=$BACKEND_URL
           docker push $REGISTRY/$ECR_REPOSITORY:$ECR_IMAGE_TAG
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "🍏 This job's status is ${{ job.status }}"
 
   deploy:
     runs-on: ubuntu-latest
