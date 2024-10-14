@@ -12,6 +12,7 @@ function MovieList({ onMovieClick }) {
     const test = `${process.env.REACT_APP_MOVIE_API_URL}/movies`;
     console.log('test---', test);
     axios.get(`${process.env.REACT_APP_MOVIE_API_URL}/movies`).then((response) => {
+      console.log('response---', response);
       setMovies(response.data.movies);
     });
   }, []);
