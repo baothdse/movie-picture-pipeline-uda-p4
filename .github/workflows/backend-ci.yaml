@@ -17,9 +17,6 @@ on:
       - synchronize
     branches:
       - 'main'
-    paths:
-      # Trigger only if files in 'backend' directory change
-      - 'starter/backend/**'
 
 jobs:
   lint:
