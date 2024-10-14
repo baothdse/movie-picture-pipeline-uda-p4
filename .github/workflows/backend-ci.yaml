@@ -4,12 +4,7 @@ run-name: ${{ github.actor }} is running Backend CI Pipeline
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  push:
-    branches:
-      - 'features/**'
-    paths:
-      #Trigger only if files in 'backend' directory change
-      - 'starter/backend/**'
+
   # Automatic trigger on pull request events targeting the main branch
   pull_request_target:
     types:

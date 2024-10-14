@@ -11,9 +11,7 @@ on:
       - synchronize
     branches:
       - 'main'
-    paths:
-      # Trigger only if files in 'frontend' directory change
-      - 'starter/frontend/**'
+
 jobs:
   lint:
     runs-on: ubuntu-latest
